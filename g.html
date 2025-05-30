@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI株式分析アシスタント</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+            padding: 20px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('35.jpg') center/cover no-repeat;
+            opacity: 0.2;
+            z-index: -1;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: #0066cc;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        
+        .input-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            position: relative;
+        }
+        
+        .stock-input {
+            width: 100%;
+            padding: 18px 25px;
+            border: 2px solid #0066cc;
+            border-radius: 50px;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stock-input:focus {
+            outline: none;
+            box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(45deg, #ff5500, #ff9900);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 85, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 85, 0, 0.6);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .feature-card {
+            flex: 1 1 300px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            border-top: 4px solid #0066cc;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 102, 204, 0.1);
+        }
+        
+        .feature-card h3 {
+            color: #0066cc;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .stats {
+            background: rgba(0, 102, 204, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .stats p {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #0066cc, #00aaff);
+            border-radius: 10px;
+            transition: width 2s ease;
+        }
+        
+        .disclaimer {
+            background-color: #f0f0f0;
+            padding: 30px;
+            margin-top: 50px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        footer {
+            background-color: #0066cc;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .feature-card {
+                flex: 1 1 100%;
+            }
+            
+            .btn {
+                padding: 14px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="hero">
+                <h1>AI株式分析アシスタント</h1>
+                <h2>株式コードまたは会社名を入力するだけで、詳細な分析レポートを取得</h2>
+                <p class="subtitle">最新の市場動向と技術データを組み合わせたAI分析で、よりスマートな投資判断をサポートします。</p>
+                
+                <div class="input-container">
+                    <input type="text" class="stock-input" placeholder="株式コードまたは会社名を入力 (例: 7203 または トヨタ自動車)">
+                </div>
+                
+                <button class="btn" onclick="startAnalysis()">無料で分析を開始</button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="features">
+            <div class="feature-card">
+                <h3>市場分析</h3>
+                <p>リアルタイムの市場データとトレンド分析を組み合わせ、株式の潜在的可能性を評価します。</p>
+            </div>
+            <div class="feature-card">
+                <h3>ニュース分析</h3>
+                <p>最新のニュースや企業発表をAIが解析し、株価に影響を与える可能性のある要素を抽出します。</p>
+            </div>
+            <div class="feature-card">
+                <h3>テクニカル分析</h3>
+                <p>過去の価格パターンとボリュームデータから、将来の価格動向を予測します。</p>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <p>本日AIシステム利用者数: <strong>51,261人</strong></p>
+            <p>平均分析時間: <strong>2.4秒</strong></p>
+            <p>ユーザー評価: <strong>98%が5つ星</strong>を付与</p>
+        </div>
+        
+        <div class="disclaimer">
+            <h3>免責事項</h3>
+            <p>当サービスで提供される情報は投資アドバイスではなく、投資判断の参考情報としてのみ提供されます。投資決定はご自身の責任で行ってください。過去の実績は将来の結果を保証するものではありません。株式投資にはリスクが伴いますので、投資額は失ってもよい範囲でお願いします。</p>
+            <p>当サービスは金融商品取引業者ではなく、金融商品の勧誘・販売・推奨を行うものではありません。データの正確性には万全を期していますが、その完全性・正確性を保証するものではありません。</p>
+            <p>個人情報の取り扱いについては当社のプライバシーポリシーをご覧ください。</p>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2023 AI株式分析アシスタント. すべての権利を保有.</p>
+            <p>日本における金融商品取引法およびGoogle広告ポリシーに準拠しています</p>
+        </div>
+    </footer>
+    
+    <div class="modal" id="progressModal">
+        <div class="modal-content">
+            <h3>AI分析を実行中...</h3>
+            <p>AIシステムが以下のデータを分析しています:</p>
+            <ul style="text-align: left; margin: 15px 0 15px 20px;">
+                <li>市場分析</li>
+                <li>最新ニュース分析</li>
+                <li>過去データ分析</li>
+            </ul>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h3>株式分析レポートが完成しました!</h3>
+            <p style="margin: 20px 0;">以下のLINEリンクをクリックしてレポートを受け取ってください。</p>
+            <p style="margin: 20px 0; font-weight: bold;">特典: 高成長が見込める10銘柄のリストをプレゼント!</p>
+            <p style="color: #ff5500; font-weight: bold;">本日限定無料枠: 残り35件</p>
+            
+            <button class="btn" onclick="opensitekkk()" style="margin-top: 30px;">LINEでレポートを受け取る</button>
+        </div>
+    </div>
+    
+    <script>
+        function startAnalysis() {
+            // プログレスモーダルを表示
+            document.getElementById('progressModal').style.display = 'flex';
+            
+            // プログレスバーをアニメーション
+            setTimeout(function() {
+                document.getElementById('progressBar').style.width = '100%';
+            }, 100);
+            
+            // 2秒後に結果モーダルを表示
+            setTimeout(function() {
+                document.getElementById('progressModal').style.display = 'none';
+                document.getElementById('resultModal').style.display = 'flex';
+            }, 2000);
+        }
+        
+        function opensitekkk() {
+            window.location.href = "https://line.me/";
+        }
+        
+        // モーダル外をクリックで閉じる
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
