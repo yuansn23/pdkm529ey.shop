@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Centro de Recrutamento - Trabalho Remoto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #d299c2 100%);
+        }
+        
+        .main-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #d299c2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+            color: #2d3748;
+        }
+        
+        .main-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #2b6cb0;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+        }
+        
+        .hero-image { 
+            border-radius: 15px;
+            margin: 30px auto;
+            object-fit: cover;
+            border: 3px solid rgba(43, 108, 176, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .features-list {
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 15px;
+            border-left: 4px solid #3182ce;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 5px 15px rgba(49, 130, 206, 0.3);
+        }
+        
+        .feature-content {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .feature-content h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2b6cb0;
+        }
+        
+        .feature-content p {
+            font-size: 1.1rem;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(49, 130, 206, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 10px;
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(49, 130, 206, 0.6);
+            background: linear-gradient(135deg, #2c5282 0%, #2a4365 100%);
+        }
+        
+        .telegram-float {
+            position: fixed;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            cursor: pointer;
+        }
+        
+        .telegram-icon {
+            width: 60px;
+            height: 60px;
+            background: #0088cc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .telegram-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(0, 136, 204, 0.6);
+        }
+        
+        .floating-cta {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            animation: breathe 2s ease-in-out infinite;
+        }
+        
+        .floating-btn {
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+            color: white;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(49, 130, 206, 0.4);
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { 
+                transform: translateX(-50%) scale(1); 
+                box-shadow: 0 10px 30px rgba(49, 130, 206, 0.4);
+            }
+            50% { 
+                transform: translateX(-50%) scale(1.05); 
+                box-shadow: 0 15px 40px rgba(49, 130, 206, 0.6);
+            }
+        }
+        
+        .disclaimer {
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(10px);
+            color: #4a5568;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border-top: 1px solid rgba(255,255,255,0.6);
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.2rem;
+                margin-bottom: 20px;
+            }
+            
+            .hero-image {
+                width: 320px;
+                height: 180px;
+                margin: 20px auto;
+            }
+            
+            .content-wrapper {
+                padding: 20px 15px;
+            }
+            
+            .features-list {
+                padding: 20px;
+                margin: 15px 0;
+            }
+            
+            .feature-item {
+                flex-direction: column;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            
+            .feature-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+                align-self: center;
+            }
+            
+            .feature-content {
+                text-align: center;
+            }
+            
+            .telegram-float {
+                right: 15px;
+            }
+            
+            .floating-cta {
+                bottom: 15px;
+            }
+            
+            .floating-btn {
+                padding: 15px 35px;
+                font-size: 1rem;
+            }
+            
+            .primary-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+                margin: 10px 5px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 1.8rem;
+            }
+            
+            .hero-image { 
+            }
+            
+            .floating-btn {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="background-overlay"></div>
+        
+        <div class="content-wrapper">
+            <h1 class="main-title">Bem-vindos ao nosso centro de recrutamento!</h1>
+            
+            <img src="img/2.jpg" class="hero-image">
+            
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">🏢</div>
+                    <div class="feature-content">
+                        <h3>Plataforma Premium</h3>
+                        <p>Somos uma plataforma premium focada em serviços de trabalho remoto, com ênfase na conformidade contratual e proteção.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-content">
+                        <h3>Oportunidade Ideal</h3>
+                        <p>Se você quer aumentar sua renda, esta pode ser sua oportunidade ideal.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">⏱️</div>
+                    <div class="feature-content">
+                        <h3>Simples e Flexível</h3>
+                        <p>Apenas 30 minutos para aprender tudo que precisa para começar!</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🤝</div>
+                    <div class="feature-content">
+                        <h3>Torne-se Parceiro</h3>
+                        <p>Junte-se a nós, torne-se nosso parceiro e ganhe dinheiro de casa de forma fácil e segura.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-content">
+                        <h3>Suporte Rápido</h3>
+                        <p>Tem dúvidas? Nossa equipe responde em 15 minutos!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="primary-btn" onclick="opensite()">Entre em Contato - Telegram</button>
+            
+            <div class="disclaimer">
+                <p>Esta é uma oportunidade de trabalho remoto legítima. Todos os contratos são transparentes e estão em conformidade com as regulamentações aplicáveis.</p>
+            </div>
+        </div>
+      
+        
+        <!-- Floating CTA -->
+        <div class="floating-cta">
+            <button class="floating-btn" onclick="opensite()">Entre em Contato - Telegram</button>
+        </div>
+    </div>
+
+    <script>
+        function opensite() {
+            // Replace with actual Telegram link
+            window.open('https://t.me/your-telegram-username', '_blank');
+        }
+        
+        // Dark mode detection
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+</body>
+</html>
